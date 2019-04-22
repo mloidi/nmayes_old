@@ -1,7 +1,10 @@
 body {
   margin: 0;
   padding: 0;
-  font-family: 'Contrail One', cursive;
+  /* background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAAXNSR0IArs4c6QAAAEhJREFUGBmNjcEJACAMA93Jr5M4pwMqwoG9KugnJLnUUvTa6FVRtkBoJlbi0n6PrqHHL4hvQx8MhC+SG7aH20qJhtLmC/Lo9BMv1RfRlj620wAAAABJRU5ErkJggg==)
+    repeat; */
+  /* background-image: linear-gradient(to bottom right,rgb(241, 248, 230), white); */
+  font-family: 'Work Sans', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
