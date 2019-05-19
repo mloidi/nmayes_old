@@ -3,6 +3,7 @@ import { NavLink as Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 import SearchBox from './SearchBox';
+import Login from './Login';
 
 const MenuHeader = styled.div`
   display: grid;
@@ -16,7 +17,7 @@ const MenuHeader = styled.div`
 const HeaderAux = styled.div`
   text-transform: uppercase;
   display: grid;
-  justify-content: start;
+  justify-content: end;
 `;
 
 const HeaderTitle = styled.div`
@@ -80,6 +81,7 @@ export default class Menu extends Component {
         <MenuHeader>
           <HeaderAux>
             <SearchBox />
+            <Login />
           </HeaderAux>
           <HeaderTitle>
             <Link className="link" exact to={'/'}>

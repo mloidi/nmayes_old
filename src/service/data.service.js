@@ -1,3 +1,6 @@
+import { POST, PATCH, DELETE, setRequestOptions, GET } from './auth.service';
+import { getAuthToken } from '../components/context/auth.context';
+
 export const Service = {
   getMuseums: async () => {
     const url = process.env.REACT_APP_BACKEND_URL + '/museums';
@@ -36,24 +39,19 @@ export const Service = {
       .catch(error => {
         throw error;
       });
-    return searchResult.size > 0 ? searchResult : null;
+    return searchResult.length > 0 ? searchResult : null;
   },
   save: async (postToSave, isNew) => {
-    const method = isNew ? 'POST' : 'PATCH';
-    const blog = { blog: postToSave };
-    const url = process.env.REACT_APP_BACKEND_URL + '/blog';
-    const req = new Request(url, {
-      method: method,
-      mode: 'cors',
-      cache: 'no-cache',
-      credentials: 'same-origin',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      redirect: 'follow',
-      referrer: 'no-referrer',
-      body: JSON.stringify(blog)
+    const url =
+      process.env.REACT_APP_BACKEND_URL +
+      '/blog/' +
+      (isNew ? '' : postToSave._id);
+    const requestOptions = setRequestOptions({
+      method: isNew ? POST : PATCH,
+      token: getAuthToken(),
+      body: { blog: postToSave }
     });
+    const req = new Request(url, requestOptions);
     const post = await fetch(req)
       .then(async response => {
         const post = await response.json();
@@ -64,9 +62,19 @@ export const Service = {
       });
     return post;
   },
-  getPosts: async () => {
-    const url = process.env.REACT_APP_BACKEND_URL + '/blog';
-    const req = new Request(url);
+  getPosts: async isAuthenticated => {
+    const url =
+      process.env.REACT_APP_BACKEND_URL +
+      '/blog' +
+      (isAuthenticated ? '' : '/public');
+
+    const requestOptions = setRequestOptions({
+      method: GET,
+      token: getAuthToken()
+    });
+
+    const req = new Request(url, requestOptions);
+
     const posts = await fetch(req)
       .then(async response => {
         const posts = await response.json();
@@ -78,6 +86,13 @@ export const Service = {
     let postsBlog = [];
     let postRow = [];
     for (let i = 0; i < posts.length; i++) {
+      posts[i].thumb =
+        posts[i].coverPhoto.substring(
+          0,
+          posts[i].coverPhoto.indexOf('/v') + 1
+        ) +
+        'c_thumb,h_206,w_285' +
+        posts[i].coverPhoto.substring(posts[i].coverPhoto.indexOf('/v'));
       if (i % 3 === 0) {
         postRow = [];
         postRow.push(posts[i]);
@@ -90,9 +105,18 @@ export const Service = {
     }
     return postsBlog;
   },
-  getPostBySlug: async slug => {
-    const url = process.env.REACT_APP_BACKEND_URL + '/blog/' + slug;
-    const req = new Request(url);
+  getPostBySlug: async (slug, isAuthenticated) => {
+    const url =
+      process.env.REACT_APP_BACKEND_URL +
+      '/blog/' +
+      (isAuthenticated ? '' : 'public/') +
+      slug;
+
+    const requestOptions = setRequestOptions({
+      method: GET,
+      token: getAuthToken()
+    });
+    const req = new Request(url, requestOptions);
     const post = await fetch(req)
       .then(async response => {
         const post = await response.json();
@@ -104,19 +128,13 @@ export const Service = {
     return post;
   },
   deletePostById: async id => {
-    const method = 'DELETE';
     const url = process.env.REACT_APP_BACKEND_URL + '/blog/' + id;
-    const req = new Request(url, {
-      method: method,
-      mode: 'cors',
-      cache: 'no-cache',
-      credentials: 'same-origin',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      redirect: 'follow',
-      referrer: 'no-referrer'
+    const requestOptions = setRequestOptions({
+      method: DELETE,
+      token: getAuthToken(),
+      body: {}
     });
+    const req = new Request(url, requestOptions);
     const post = await fetch(req)
       .then(async response => {
         const post = await response.json();

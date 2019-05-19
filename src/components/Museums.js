@@ -26,6 +26,7 @@ export default class Museums extends Component {
   getMuseums = async () => {
     await Service.getMuseums()
       .then(museums => {
+        console.log(museums);
         this.setState({
           museums
         });
@@ -38,17 +39,19 @@ export default class Museums extends Component {
   render() {
     return (
       <Page>
-        <Helmet>
-          <title>Nicole Mayes | {page}</title>
-        </Helmet>
-        <PageTitle>{page}</PageTitle>
-        <p>Description !!!!</p>
-        <Area>
-          {this.state.museums &&
-            this.state.museums.map(museum => (
-              <Card key={museum.id} museum={museum} />
-            ))}
-        </Area>
+        <div>
+          <Helmet>
+            <title>Nicole Mayes | {page}</title>
+          </Helmet>
+          <PageTitle>{page}</PageTitle>
+          <p>Description !!!!</p>
+          <Area>
+            {this.state.museums &&
+              this.state.museums.map(museum => (
+                <Card key={museum.id} museum={museum} />
+              ))}
+          </Area>
+        </div>
       </Page>
     );
   }

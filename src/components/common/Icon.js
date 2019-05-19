@@ -8,6 +8,7 @@ import {
   faGraduationCap,
   faBriefcase,
   faArrowRight,
+  faArrowLeft,
   faCaretRight,
   faCertificate,
   faCheck,
@@ -23,7 +24,14 @@ import {
   faLink,
   faImage,
   faTrash,
-  faPlus
+  faPlus,
+  faSignInAlt,
+  faSignOutAlt,
+  faCheckCircle,
+  faExclamationCircle,
+  faTimes,
+  faSpinner,
+  faDungeon
 } from '@fortawesome/free-solid-svg-icons';
 import {
   faGithub,
@@ -71,6 +79,8 @@ const Icon = props => (
       <FontAwesomeIcon icon={faLaptopCode} />
     ) : props.icon === 'faArrowRight' ? (
       <FontAwesomeIcon icon={faArrowRight} />
+    ) : props.icon === 'faArrowLeft' ? (
+      <FontAwesomeIcon icon={faArrowLeft} />
     ) : props.icon === 'faGraduationCap' ? (
       <FontAwesomeIcon icon={faGraduationCap} />
     ) : props.icon === 'faBriefcase' ? (
@@ -107,6 +117,20 @@ const Icon = props => (
       <FontAwesomeIcon icon={faTrash} />
     ) : props.icon === 'faPlus' ? (
       <FontAwesomeIcon icon={faPlus} />
+    ) : props.icon === 'faSignInAlt' ? (
+      <FontAwesomeIcon icon={faSignInAlt} />
+    ) : props.icon === 'faSignOutAlt' ? (
+      <FontAwesomeIcon icon={faSignOutAlt} />
+    ) : props.icon === 'faCheckCircle' ? (
+      <FontAwesomeIcon icon={faCheckCircle} />
+    ) : props.icon === 'faExclamationCircle' ? (
+      <FontAwesomeIcon icon={faExclamationCircle} />
+    ) : props.icon === 'faTimes' ? (
+      <FontAwesomeIcon icon={faTimes} />
+    ) : props.icon === 'faSpinner' ? (
+      <FontAwesomeIcon icon={faSpinner} />
+    ) : props.icon === 'faDungeon' ? (
+      <FontAwesomeIcon icon={faDungeon} />
     ) : props.icon === 'faCoffee' ? (
       <FontAwesomeIcon icon={faCoffee} />
     ) : (

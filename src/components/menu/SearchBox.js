@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import { withRouter } from 'react-router';
 import styled from 'styled-components';
 
-import { Service } from '../service/data.service';
-import Input from './common/Input';
-import Icon from './common/Icon';
+import { Service } from '../../service/data.service';
+import Input from '../common/Input';
+import Icon from '../common/Icon';
 
 const SearchArea = styled.div`
   position: absolute;
@@ -84,9 +84,10 @@ class SearchBox extends Component {
     });
   };
 
-  search = async searchBy => {
-    await Service.search(searchBy)
+  search =  searchBy => {
+     Service.search(searchBy)
       .then(results => {
+        console.log(results)
         this.setState({
           results
         });

@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { NavLink as Link } from 'react-router-dom';
+import styled from 'styled-components';
 
 import {
   Card,
@@ -8,9 +9,26 @@ import {
   CardPostBar,
   CardPostContent,
   CardSeparator,
+  Author,
+  PostDetails,
+  PublishedAt,
+  PostDescription,
   Button
 } from '../css/Common.Style';
 import Icon from './common/Icon';
+import { cardDate, composeName, isLoggedUserAuthor } from './common/Util';
+import { AuthContext, AlertContext, LoadingContext } from './context/';
+
+const Image = styled.img`
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+`;
+
+const Sep = styled.div`
+  padding: 1rem;
+`;
 
 export const CardMuseum = ({ museum }) => {
   return (
@@ -36,33 +54,66 @@ export const CardMuseum = ({ museum }) => {
 
 export const CardBlog = props => {
   const post = props.post;
-  
+  const authContext = useContext(AuthContext);
+  const loggedUserIsAuthorOrNotAuthenticated =
+    !authContext.isAuthenticated() ||
+    (authContext.isAuthenticated() &&
+      authContext.getUser() &&
+      isLoggedUserAuthor(authContext.getUser()._id, post.author._id));
   return (
     <Card>
       <CardPost>
         <CardPostBar>
-          <Link className="link" to={`/post/${post.slug}`}>
-            <Icon icon="faEdit" />
-          </Link>
-          <Button onClick={() => props.delete(post._id, post.title)}>
-            <Icon icon="faTrash" />
-          </Button>
-        </CardPostBar>
-        <CardPostContent>
-          {post.coverPhoto && (
+          {authContext.isAuthenticated() &&
+          loggedUserIsAuthorOrNotAuthenticated ? (
             <React.Fragment>
-              <br />
-              <img width="100%" src={post.coverPhoto} alt="Upload Preview" />
-              <br />
+              <Link className="link" to={`/post/edit/${post.slug}`}>
+                <Icon icon="faEdit" /> Edit
+              </Link>
+              <LoadingContext.Consumer>
+                {loadingContext => (
+                  <AlertContext.Consumer>
+                    {alertContext => (
+                      <Button
+                        onClick={() => {
+                          loadingContext.setLoading(true);
+                          props.delete(post._id, post.title, alertContext);
+                        }}
+                        fontSize="1rem"
+                      >
+                        <Icon icon="faTrash" /> Remove
+                      </Button>
+                    )}
+                  </AlertContext.Consumer>
+                )}
+              </LoadingContext.Consumer>
             </React.Fragment>
+          ) : (
+            <Sep />
           )}
+        </CardPostBar>
+        <CardPostContent
+          onClick={() => {
+            const to = '/post/view/' + post.slug;
+            props.history.push(to);
+          }}
+        >
+          {post.thumb && <Image src={post.thumb} alt={post.title} />}
           <h3>{post.title}</h3>
-          <p>{post.description}</p>
-          {/* {post.text && (
-        <TextEditor readOnly={true} editorState={JSON.parse(props.post.text)} />
-      )} */}
+          <PostDetails>
+            <Author
+              loggedUserIsAuthorOrNotAuthenticated={
+                loggedUserIsAuthorOrNotAuthenticated
+              }
+            >
+              By{' '}
+              {post.author &&
+                composeName(post.author.firstName, post.author.lastName)}
+            </Author>
+            <PublishedAt>{cardDate(post.created, post.updated)}</PublishedAt>
+          </PostDetails>
+          <PostDescription>{post.description}</PostDescription>
         </CardPostContent>
-        <Link to={`/post/${post.slug}`}>Read</Link>
       </CardPost>
       <CardSeparator />
     </Card>

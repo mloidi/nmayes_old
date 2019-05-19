@@ -9,10 +9,12 @@ export default class Events extends Component {
   render() {
     return (
       <Page>
-        <Helmet>
-          <title>Nicole Mayes | {page}</title>
-        </Helmet>
-        <PageTitle>{page}</PageTitle>
+        <div>
+          <Helmet>
+            <title>Nicole Mayes | {page}</title>
+          </Helmet>
+          <PageTitle>{page}</PageTitle>
+        </div>
       </Page>
     );
   }

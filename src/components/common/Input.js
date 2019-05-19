@@ -18,25 +18,74 @@ const InputText = styled.input`
   }
 `;
 
-const InputCheckBox = styled.input`
-  border: none;
-  border-radius: 0.2rem;
-  border-bottom: 2px solid #ccc;
-  border-left: 1px solid #ccc;
-  border-right: 1px solid #ccc;
-  border-top: 1px solid #ccc;
-  text-align: start;
-  margin: 0;
-  padding: 0.5rem;
-  font-size: 1rem;
-  background-color: transparent;
-  :focus {
-    outline: none;
-    transition: 0.5s;
-    border-color: rgb(161, 207, 90);
-    border-left: 1px solid rgb(161, 207, 90);
-    border-right: 1px solid rgb(161, 207, 90);
-    border-top: 1px solid rgb(161, 207, 90);
+const InputCheckBox = styled.div`
+  display: block;
+  position: relative;
+  padding-left: 1.5rem;
+  &:hover input ~ .checkmark {
+    border: 0.1rem solid rgb(161, 207, 90);
+  }
+  .inputCheckBox {
+    position: absolute;
+    left: 0;
+    opacity: 0;
+    cursor: pointer;
+    height: 1rem;
+    width: 2rem;
+    z-index: 1;
+  }
+  .checkmark {
+    position: absolute;
+    left: 0;
+    border: 0.1rem solid transparent;
+    height: 1rem;
+    width: 1rem;
+    background-color: transparent;
+    cursor: pointer;
+    transition: border 0.5s, background-color 0.5s;
+    &:after {
+      content: '';
+      position: absolute;
+      display: none;
+      left: 0.2rem;
+      top: -0.1rem;
+      width: 0.3rem;
+      height: 0.8rem;
+      border: solid rgb(161, 207, 90);
+      border-width: 0 0.2rem 0.2rem 0;
+      -webkit-transform: rotate(45deg);
+      -ms-transform: rotate(45deg);
+      transform: rotate(45deg);
+    }
+  }
+  .uncheckmark {
+    position: absolute;
+    left: 0;
+    border: 0.1rem solid transparent;
+    height: 1rem;
+    width: 1rem;
+    background-color: transparent;
+    cursor: pointer;
+    &:after {
+      content: '';
+      position: absolute;
+      display: none;
+      left: 0;
+      top: 0.4rem;
+      width: 1rem;
+      height: 0.8rem;
+      border: solid red;
+      border-width: 0.2rem 0 0 0;
+      /* -webkit-transform: rotate(45deg);
+      -ms-transform: rotate(45deg);
+      transform: rotate(45deg); */
+    }
+  }
+  input:checked ~ .checkmark:after {
+    display: block;
+  }
+  input:not(:checked) ~ .uncheckmark:after {
+    display: block;
   }
 `;
 
@@ -94,7 +143,14 @@ const Input = props => (
     )}
     {props.type === 'password' && <InputText {...props} />}
     {props.type === 'email' && <InputText {...props} />}
-    {props.type === 'checkbox' && <InputCheckBox {...props} />}
+    {props.type === 'checkbox' && (
+      <InputCheckBox>
+        <input className="inputCheckBox" {...props} />
+        <span className="checkmark" />
+        <span className="uncheckmark" />
+        {props.label}
+      </InputCheckBox>
+    )}
     {props.type === 'textarea' && <InputTextArea {...props} />}
     {props.type === 'submit' && (
       <InputSubmit {...props}>{props.children}</InputSubmit>

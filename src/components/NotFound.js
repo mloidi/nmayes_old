@@ -3,9 +3,9 @@ import { Helmet } from 'react-helmet';
 
 import { Page, PageTitle } from '../css/Common.Style';
 
-const page = 'Education';
+const page = 'Not found';
 
-export default class Education extends Component {
+export default class NotFound extends Component {
   render() {
     return (
       <Page>

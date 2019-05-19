@@ -11,30 +11,32 @@ import {
 import { Service } from '../service/data.service';
 import { CardBlog } from './Card';
 import Icon from './common/Icon';
-import Message from './messages/Message';
+import { AuthContext } from './context/';
+import Tag from './tag/Tag';
 
 const page = 'Blog';
 
 const Area = styled.div`
   display: grid;
-  grid-template-columns: 20rem 20rem 20rem;
-  grid-gap: 2rem;
-  margin-right: 20%;
+  grid-template-columns: 33% 33% 33%;
+`;
+
+const ControlsBar = styled.div`
+  border-bottom: 0.2rem solid rgb(161, 207, 90);
 `;
 
 export default class Blog extends Component {
   state = {
-    posts: null,
-    showMessage: false,
-    message: null
+    posts: null
   };
 
   componentDidMount() {
-    this.getPosts();
+    const authContext = this.context;
+    this.getPosts(authContext.isAuthenticated());
   }
 
-  getPosts = async () => {
-    await Service.getPosts()
+  getPosts = async isAuthenticated => {
+    await Service.getPosts(isAuthenticated)
       .then(posts => {
         this.setState({
           posts
@@ -45,23 +47,16 @@ export default class Blog extends Component {
       });
   };
 
-  goTo = slug => {
-    const to = '/post/' + slug;
+  goTo = (option, slug) => {
+    const to = '/post/' + option + '/' + slug;
     this.props.history.push(to);
   };
 
-  delete = async (id, postTitle) => {
+  delete = async (id, postTitle, alertContext) => {
     await Service.deletePostById(id)
       .then(() => {
-        const message = {
-          title: 'Item deleted',
-          text: postTitle + ' post is deleted!!!'
-        };
-        this.setState({
-          message,
-          showMessage: true,
-        });
-        this.getPosts()
+        alertContext.sendSuccess(postTitle + " it's deleted.");
+        this.getPosts(true);
       })
       .catch(error => {
         console.error(error);
@@ -71,31 +66,48 @@ export default class Blog extends Component {
   render() {
     let row = 1;
     return (
-      <Page>
-        <Helmet>
-          <title>Nicole Mayes | {page}</title>
-        </Helmet>
-        <PageTitle>{page}</PageTitle>
-
-        <Button onClick={() => this.goTo('')} fontSize="1.5rem">
-          <Icon icon="faPlus" />
-        </Button>
-        <br />
-        {this.state.showMessage && <Message message={this.state.message} />}
-        {this.state.posts &&
-          this.state.posts.map(postRow => (
-            <React.Fragment key={row++}>
-              <Area>
-                {postRow.map(post => (
-                  <React.Fragment key={post._id}>
-                    <CardBlog key={post._id} post={post} delete={this.delete} />
+      <AuthContext.Consumer>
+        {authContext => (
+          <Page>
+            <div>
+              <Helmet>
+                <title>Nicole Mayes | {page}</title>
+              </Helmet>
+              <PageTitle>{page}</PageTitle>
+              {authContext.isAuthenticated() && (
+                <ControlsBar>
+                  <Button
+                    onClick={() => this.goTo('new', '')}
+                    fontSize="1.5rem"
+                  >
+                    <Icon icon="faPlus" /> New post
+                  </Button>
+                </ControlsBar>
+              )}
+              {this.state.posts &&
+                this.state.posts.map(postRow => (
+                  <React.Fragment key={row++}>
+                    <Area>
+                      {postRow.map(post => (
+                        <React.Fragment key={post._id}>
+                          <CardBlog
+                            key={post._id}
+                            post={post}
+                            delete={this.delete}
+                            {...this.props}
+                          />
+                        </React.Fragment>
+                      ))}
+                    </Area>
+                    <CardHorizontalSeparator />
                   </React.Fragment>
                 ))}
-              </Area>
-              <CardHorizontalSeparator />
-            </React.Fragment>
-          ))}
-      </Page>
+            </div>
+            <Tag tags={this.state.tags} />
+          </Page>
+        )}
+      </AuthContext.Consumer>
     );
   }
 }
+Blog.contextType = AuthContext;

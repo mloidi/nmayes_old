@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
 import { Helmet } from 'react-helmet';
 
 import { Page, PageTitle } from '../css/Common.Style';
@@ -9,10 +9,12 @@ export default class Events extends Component {
   render() {
     return (
       <Page>
-        <Helmet>
-          <title>Nicole Mayes | {page}</title>
-        </Helmet>
-        <PageTitle>{page}</PageTitle>
+        <div>
+          <Helmet>
+            <title>Nicole Mayes | {page}</title>
+          </Helmet>
+          <PageTitle>{page}</PageTitle>
+        </div>
       </Page>
     );
   }

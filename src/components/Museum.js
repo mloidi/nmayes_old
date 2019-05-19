@@ -39,15 +39,17 @@ export default class Museum extends Component {
   render() {
     return (
       <Page>
-        <Helmet>
-          <title>Nicole Mayes | {page}</title>
-        </Helmet>
-        {this.state.museum && (
-          <React.Fragment>
-            <PageTitle>{this.state.museum.name}</PageTitle>
-            <p>{this.state.museum.university}</p>
-          </React.Fragment>
-        )}
+        <div>
+          <Helmet>
+            <title>Nicole Mayes | {page}</title>
+          </Helmet>
+          {this.state.museum && (
+            <React.Fragment>
+              <PageTitle>{this.state.museum.name}</PageTitle>
+              <p>{this.state.museum.university}</p>
+            </React.Fragment>
+          )}
+        </div>
       </Page>
     );
   }
