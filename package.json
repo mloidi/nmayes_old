@@ -7,7 +7,7 @@
     "@fortawesome/free-brands-svg-icons": "^5.15.1",
     "@fortawesome/free-solid-svg-icons": "^5.15.1",
     "@fortawesome/react-fontawesome": "^0.1.13",
-    "axios": "^0.21.0",
+    "axios": "^0.21.1",
     "draft-js": "^0.11.7",
     "draft-js-plugins-editor": "^3.0.0",
     "moment": "^2.29.1",
